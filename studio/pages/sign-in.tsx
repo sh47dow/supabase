@@ -1,5 +1,6 @@
 import SignInForm from 'components/interfaces/SignIn/SignInForm'
 import SignInWithGitHub from 'components/interfaces/SignIn/SignInWithGitHub'
+import SignInWithSSO from 'components/interfaces/SignIn/SignInWithSSO'
 import { SignInLayout } from 'components/layouts'
 import Connecting from 'components/ui/Loading'
 import { auth } from 'lib/gotrue'
@@ -40,6 +41,7 @@ const SignInPage: NextPageWithLayout = () => {
     <>
       <div className="flex flex-col gap-5">
         <SignInWithGitHub />
+        <SignInWithSSO />
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
