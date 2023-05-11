@@ -1,6 +1,7 @@
-import { auth } from 'lib/gotrue'
-import { isUndefined } from 'lodash'
+import {isNumber, isUndefined} from 'lodash'
 import { SupaResponse } from 'types/base'
+import { parse } from 'cookie'
+import {getCookie} from "../../helpers";
 
 export function handleError<T>(e: any, requestId: string): SupaResponse<T> {
   const message = e?.message ? `An error has occurred: ${e.message}` : 'An error has occurred'
@@ -19,7 +20,12 @@ export async function handleResponse<T>(
     const resTxt = await response.text()
     try {
       // try to parse response text as json
-      return JSON.parse(resTxt)
+      const res = JSON.parse(resTxt)
+      if (isNumber(res.code) && res.code !== 0) {
+        return {error: {message: res.msg, ...res}} as SupaResponse<T>
+      } else {
+        return res
+      }
     } catch (err) {
       // return as text plain
       return resTxt as any
@@ -90,19 +96,30 @@ export async function getAccessToken() {
   // ignore if server-side
   if (typeof window === 'undefined') return ''
 
-  const {
-    data: { session },
-  } = await auth.getSession()
-
-  return session?.access_token
+  // const {
+  //   data: { session },
+  // } = await auth.getSession()
+  //
+  // return session?.access_token
+  const _token = getCookie('_token')
+  if (_token) {
+    return _token.token
+  } else {
+    return undefined
+  }
 }
 
 export async function constructHeaders(requestId: string, optionHeaders?: { [prop: string]: any }) {
   let headers: { [prop: string]: any } = {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
     Accept: 'application/json',
     'X-Request-Id': requestId,
     ...optionHeaders,
+  }
+  if (!headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json'
+  } else if (headers['Content-Type'] === 'multiple/form-data') {
+    delete headers['Content-Type']
   }
 
   const hasAuthHeader = !isUndefined(optionHeaders) && 'Authorization' in optionHeaders
@@ -111,10 +128,10 @@ export async function constructHeaders(requestId: string, optionHeaders?: { [pro
     if (accessToken) headers.Authorization = `Bearer ${accessToken}`
   }
 
-  if (typeof window !== 'undefined') {
-    const gaClientId = window?.localStorage?.getItem('ga_client_id')
-    if (gaClientId && gaClientId !== 'undefined') headers['X-GA-Client-Id'] = gaClientId
-  }
+  // if (typeof window !== 'undefined') {
+  //   const gaClientId = window?.localStorage?.getItem('ga_client_id')
+  //   if (gaClientId && gaClientId !== 'undefined') headers['X-GA-Client-Id'] = gaClientId
+  // }
 
   return headers
 }

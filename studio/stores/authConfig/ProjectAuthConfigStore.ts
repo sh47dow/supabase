@@ -1,7 +1,7 @@
 import { makeAutoObservable, toJS } from 'mobx'
 import { UserContentMap } from 'types'
 import { IRootStore } from '../RootStore'
-import { API_URL } from 'lib/constants'
+import {API_URL, PROJECT_STATUS} from 'lib/constants'
 import { get, patch } from 'lib/common/fetch'
 
 export interface IProjectAuthConfigStore {
@@ -64,6 +64,9 @@ export default class ProjectAuthConfigStore implements IProjectAuthConfigStore {
       'Content-Type': 'application/json',
     }
     const response = await get(this.baseUrl, { headers })
+    if(!response.SMS_PROVIDER){
+      response.SMS_PROVIDER = 'aliyun'
+    }
     if (response.error) {
       throw response.error
     }
@@ -102,6 +105,7 @@ export default class ProjectAuthConfigStore implements IProjectAuthConfigStore {
       const updated = await patch(url, payload, { headers })
       if (updated.error) throw updated.error
       this.data = updated
+      this.rootStore.app.onProjectStatusUpdated(this.rootStore.selectedProjectRef!, PROJECT_STATUS.COMING_UP)
       return { data: updated, error: null }
     } catch (error) {
       return { data: null, error }

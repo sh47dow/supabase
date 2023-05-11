@@ -64,6 +64,7 @@ function Dropdown({
         align={align}
         className={classes.join(' ')}
         style={style}
+        onClick={(e) => e.stopPropagation()}
       >
         {arrow && (
           <RadixDropdown.Arrow className={__styles.arrow} offset={10}></RadixDropdown.Arrow>

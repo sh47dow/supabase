@@ -1,5 +1,6 @@
 export * from './infrastructure'
 export * from './metrics'
+export * from './functions'
 
 export const IS_PLATFORM = process.env.NEXT_PUBLIC_IS_PLATFORM === 'true'
 export const API_URL = IS_PLATFORM ? process.env.NEXT_PUBLIC_API_URL : '/api'
@@ -84,3 +85,10 @@ export const STRIPE_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || 'pk_test_XVwg5IZH3I9Gti98hZw6KRzd00v5858heG'
 
 export const USAGE_APPROACHING_THRESHOLD = 0.75
+
+export const COMPRESSED_FILE_SIZE_LIMIT = 20 * 1024 * 1024 // 20MB
+export const FILE_UPLOAD_PART_SIZE = 1024 * 1024 // 1MB
+export const SOURCE_FILE_SIZE_LIMIT = 100 * 1024 * 1024 // 100MB
+
+export const DEFAULT_FUNCTION_ENVS = ['API_URL', 'ANON_KEY', 'SERVICE_ROLE_KEY']
+export const FUNCTION_URL_EXPIRY = 60 * 60 * 24 * 7 // 7 days

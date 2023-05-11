@@ -81,7 +81,7 @@ const NotificationsPopover: FC<Props> = () => {
         error,
       })
     } else {
-      app.onProjectPostgrestStatusUpdated(projectId, 'OFFLINE')
+      app.onProjectPostgrestStatusUpdated(ref, 'OFFLINE')
       ui.setNotification({ category: 'success', message: `Restarting services` })
       router.push(`/project/${ref}`)
     }

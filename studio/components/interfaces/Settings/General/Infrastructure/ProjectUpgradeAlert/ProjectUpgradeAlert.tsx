@@ -50,7 +50,7 @@ const ProjectUpgradeAlert: FC<Props> = ({}) => {
     } else {
       const projectId = ui.selectedProject?.id
       if (projectId !== undefined) {
-        app.onProjectStatusUpdated(projectId, PROJECT_STATUS.UPGRADING)
+        app.onProjectStatusUpdated(ref || '', PROJECT_STATUS.UPGRADING)
         ui.setNotification({ category: 'success', message: 'Upgrading project' })
         router.push(`/project/${ref}?upgradeInitiated=true`)
       }

@@ -69,7 +69,7 @@ const RestartServerButton: FC<Props> = ({ project }) => {
   }
 
   const onRestartSuccess = () => {
-    app.onProjectPostgrestStatusUpdated(projectId, 'OFFLINE')
+    app.onProjectPostgrestStatusUpdated(projectRef, 'OFFLINE')
     ui.setNotification({ category: 'success', message: 'Restarting server' })
     router.push(`/project/${projectRef}`)
     setLoading(false)

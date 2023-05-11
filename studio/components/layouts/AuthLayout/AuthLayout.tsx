@@ -7,6 +7,8 @@ import BaseLayout from '../'
 import Error from 'components/ui/Error'
 import ProductMenu from 'components/ui/ProductMenu'
 import { generateAuthMenu } from './AuthLayout.utils'
+import ProjectPausedState from "../ProjectLayout/ProjectPausedState";
+import {PROJECT_STATUS} from "../../../lib/constants";
 
 interface Props {
   title?: string
@@ -41,7 +43,11 @@ const AuthLayout: FC<Props> = ({ title, children }) => {
   if (error) {
     return (
       <BaseLayout>
-        <Error error={error} />
+        {
+          ui.selectedProject?.status === PROJECT_STATUS.INACTIVE ?
+            <ProjectPausedState project={ui.selectedProject!}/> :
+            <Error error={error}/>
+        }
       </BaseLayout>
     )
   }

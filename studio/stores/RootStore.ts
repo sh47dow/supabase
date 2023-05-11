@@ -10,6 +10,7 @@ import ProjectAuthConfigStore, {
   IProjectAuthConfigStore,
 } from './authConfig/ProjectAuthConfigStore'
 import VaultStore, { IVaultStore } from './project/VaultStore'
+import {IProjectStaticHostingStore, ProjectStaticHostingStore} from "./project/ProjectStaticHostingStore";
 
 // Temporary disable mobx warnings
 // TODO: need to remove this after refactoring old stores.
@@ -26,6 +27,7 @@ export interface IRootStore {
   backups: IProjectBackupsStore
   authConfig: IProjectAuthConfigStore
   vault: IVaultStore
+  hosting: IProjectStaticHostingStore
 
   selectedProjectRef?: string
 
@@ -41,6 +43,7 @@ export class RootStore implements IRootStore {
   backups: IProjectBackupsStore
   authConfig: IProjectAuthConfigStore
   vault: IVaultStore
+  hosting: IProjectStaticHostingStore
 
   selectedProjectRef: string | undefined
 
@@ -54,6 +57,7 @@ export class RootStore implements IRootStore {
     this.backups = new ProjectBackupsStore(this, { projectRef: '' })
     this.authConfig = new ProjectAuthConfigStore(this, { projectRef: '' })
     this.vault = new VaultStore(this)
+    this.hosting = new ProjectStaticHostingStore(this, {projectRef: ''})
   }
 
   /**
@@ -75,6 +79,7 @@ export class RootStore implements IRootStore {
       this.authConfig.setProjectRef(project.ref)
       this.content.setProjectRef(project.ref)
       this.backups.setProjectRef(project.ref)
+      this.hosting.setProjectRef(project.ref)
       // ui set must come last
       this.ui.setProjectRef(project.ref)
     }
@@ -82,10 +87,12 @@ export class RootStore implements IRootStore {
     // fetch project detail when
     // - project not found yet. projectStore is loading
     // - connectionString is not available. projectStore loaded
-    const found = this.app.projects.find((x: Project) => x.ref === value)
+    const found = this.app.projects.data[value]
     if (found?.connectionString === undefined) {
       this.app.projects.fetchDetail(value, (project) => {
         setProjectRefs(project)
+      }, error => {
+        this.ui.setNotification({ category: 'error', message: error.message })
       })
     } else {
       setProjectRefs(found)

@@ -10,15 +10,15 @@ import OrganizationStore from './OrganizationStore'
 import ProjectStore, { IProjectStore } from './ProjectStore'
 
 export interface IAppStore {
-  projects: IProjectStore
+  projects: ProjectStore
   organizations: OrganizationStore
   database: IDatabaseStore
   onProjectCreated: (project: Project) => void
   onProjectUpdated: (project: Project) => void
   onProjectDeleted: (project: Project) => void
-  onProjectPaused: (projectId: number) => void
-  onProjectStatusUpdated: (projectId: number, value: string) => void
-  onProjectPostgrestStatusUpdated: (projectId: number, value: 'OFFLINE' | 'ONLINE') => void
+  onProjectPaused: (projectRef: string) => void
+  onProjectStatusUpdated: (projectRef: string, value: string) => void
+  onProjectPostgrestStatusUpdated: (projectRef: string, value: 'OFFLINE' | 'ONLINE') => void
   onOrgAdded: (org: any) => void
   onOrgUpdated: (org: any) => void
   onOrgDeleted: (org: any) => void
@@ -37,7 +37,7 @@ export default class AppStore implements IAppStore {
 
     const headers: any = {}
 
-    this.projects = new ProjectStore(rootStore, `${this.baseUrl}/projects`, headers)
+    this.projects = new ProjectStore(rootStore, `${this.baseUrl}/projects`, headers, {identifier: 'ref'})
     this.organizations = new OrganizationStore(rootStore, `${this.baseUrl}/organizations`, headers)
     this.database = new DatabaseStore(rootStore, `${this.baseUrl}/database`, headers)
   }
@@ -60,8 +60,8 @@ export default class AppStore implements IAppStore {
   }
 
   onProjectUpdated(project: any) {
-    if (project && project.id) {
-      const clone = cloneDeep(this.projects.data[project.id])
+    if (project && project.ref) {
+      const clone = cloneDeep(this.projects.data[project.ref])
       // only update available param
       if (project.name) clone.name = project.name
       if (project.status) clone.status = project.status
@@ -80,14 +80,14 @@ export default class AppStore implements IAppStore {
 
   // At global store level so that it can continue checking while the user
   // is doing something else outside of the project page
-  async onProjectPaused(projectId: number) {
+  async onProjectPaused(projectRef: string) {
     const checkProjectInactive = async () => {
-      const projectRef = this.projects.data[projectId]?.ref
+      // const projectRef = this.projects.data[projectId]?.ref
       const projectStatus = await getWithTimeout(`${API_URL}/projects/${projectRef}/status`, {
         timeout: 2000,
       })
       if (projectStatus.status === PROJECT_STATUS.INACTIVE) {
-        this.onProjectStatusUpdated(projectId, PROJECT_STATUS.INACTIVE)
+        this.onProjectStatusUpdated(projectRef, PROJECT_STATUS.INACTIVE)
       } else {
         setTimeout(() => checkProjectInactive(), 5000)
       }
@@ -96,16 +96,16 @@ export default class AppStore implements IAppStore {
     setTimeout(() => checkProjectInactive(), 5000)
   }
 
-  onProjectStatusUpdated(projectId: number, value: string) {
-    const clone = cloneDeep(this.projects.data[projectId])
+  onProjectStatusUpdated(projectRef: string, value: string) {
+    const clone = cloneDeep(this.projects.data[projectRef])
     clone.status = value
-    this.projects.data[projectId] = clone
+    this.projects.data[projectRef] = clone
   }
 
-  onProjectPostgrestStatusUpdated(projectId: number, value: 'OFFLINE' | 'ONLINE') {
-    const clone = cloneDeep(this.projects.data[projectId])
+  onProjectPostgrestStatusUpdated(projectRef: string, value: 'OFFLINE' | 'ONLINE') {
+    const clone = cloneDeep(this.projects.data[projectRef])
     clone.postgrestStatus = value
-    this.projects.data[projectId] = clone
+    this.projects.data[projectRef] = clone
   }
 
   onOrgUpdated(updatedOrg: Organization) {

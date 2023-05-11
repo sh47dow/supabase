@@ -1,3 +1,4 @@
+import useSWR from 'swr'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -5,15 +6,14 @@ import { Button } from 'ui'
 import { observer } from 'mobx-react-lite'
 import { PermissionAction } from '@supabase/shared-types/out/constants'
 
-import { checkPermissions, useParams } from 'hooks'
+import { checkPermissions } from 'hooks'
 import { ChartIntervals, NextPageWithLayout } from 'types'
-import { DATE_FORMAT } from 'lib/constants'
+import { get } from 'lib/common/fetch'
+import { API_URL, DATE_FORMAT } from 'lib/constants'
 import Panel from 'components/ui/Panel'
 import NoPermission from 'components/ui/NoPermission'
 import ChartHandler from 'components/to-be-cleaned/Charts/ChartHandler'
 import FunctionsLayout from 'components/layouts/FunctionsLayout'
-import { useEdgeFunctionQuery } from 'data/edge-functions/edge-function-query'
-import { useFunctionsInvStatsQuery } from 'data/analytics/functions-inv-stats-query'
 
 const CHART_INTERVALS: ChartIntervals[] = [
   {
@@ -50,19 +50,17 @@ function calculateHighlightedValue(array: any, attribute: string, options?: { su
 
 const PageLayout: NextPageWithLayout = () => {
   const router = useRouter()
-  const { ref: projectRef, functionSlug } = useParams()
+  const { ref, id } = router.query
 
   const [interval, setInterval] = useState<string>('15min')
+
+  const url = `${API_URL}/projects/${ref}/analytics/endpoints/functions.inv-stats`
   const selectedInterval = CHART_INTERVALS.find((i) => i.key === interval) || CHART_INTERVALS[1]
 
-  const { data: selectedFunction } = useEdgeFunctionQuery({ projectRef, slug: functionSlug })
-  const id = selectedFunction?.id
-
-  const { data, error } = useFunctionsInvStatsQuery({
-    projectRef,
-    functionId: id,
-    interval: selectedInterval.key,
-  })
+  const { data, error }: any = useSWR(
+    `${url}?interval=${selectedInterval.key}&function_id=${id}`,
+    get
+  )
 
   const startDate = dayjs()
     .subtract(selectedInterval.startValue, selectedInterval.startUnit)
@@ -83,13 +81,13 @@ const PageLayout: NextPageWithLayout = () => {
     if (timestampDigits < 16) {
       // pad unix timestamp with additional 0 and then forward
       const paddedTimestamp = String(timestamp) + '0'.repeat(16 - timestampDigits)
-      router.push(`/project/${projectRef}/functions/${id}/logs?te=${paddedTimestamp}`)
+      router.push(`/project/${ref}/functions/${id}/logs?te=${paddedTimestamp}`)
     } else {
-      router.push(`/project/${projectRef}/functions/${id}/logs?te=${timestamp}`)
+      router.push(`/project/${ref}/functions/${id}/logs?te=${timestamp}`)
     }
   }
 
-  const canReadFunction = checkPermissions(PermissionAction.FUNCTIONS_READ, functionSlug as string)
+  const canReadFunction = checkPermissions(PermissionAction.FUNCTIONS_READ, id as string)
   if (!canReadFunction) {
     return <NoPermission isFullPage resourceText="access this edge function" />
   }

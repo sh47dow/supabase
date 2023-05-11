@@ -1,4 +1,3 @@
-const { withSentryConfig } = require('@sentry/nextjs')
 const withPlugins = require('next-compose-plugins')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -170,10 +169,10 @@ const nextConfig = {
     domains: ['github.com'],
   },
   // Ref: https://nextjs.org/docs/advanced-features/output-file-tracing#caveats
-  experimental: {
-    outputStandalone: true,
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-  },
+  // experimental: {
+  //   outputStandalone: true,
+  //   outputFileTracingRoot: path.join(__dirname, '../../'),
+  // },
 }
 
 // Export all config
@@ -196,7 +195,4 @@ const sentryWebpackPluginOptions = {
 
 // Make sure adding Sentry options is the last code to run before exporting, to
 // ensure that your source maps include changes from all other Webpack plugins
-module.exports =
-  process.env.NEXT_PUBLIC_IS_PLATFORM === 'true'
-    ? withSentryConfig(moduleExports, sentryWebpackPluginOptions)
-    : withPlugins([withTM()], nextConfig)
+module.exports = moduleExports

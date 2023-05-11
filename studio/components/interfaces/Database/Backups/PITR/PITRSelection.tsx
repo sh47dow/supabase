@@ -150,7 +150,7 @@ const PITRSelection = ({}) => {
     } else {
       setTimeout(() => {
         setShowConfirmation(false)
-        app.onProjectStatusUpdated(projectId, PROJECT_STATUS.RESTORING)
+        app.onProjectStatusUpdated(projectRef, PROJECT_STATUS.RESTORING)
         router.push(`/project/${projectRef}`)
       }, 3000)
     }

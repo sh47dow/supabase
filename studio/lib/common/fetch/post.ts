@@ -13,7 +13,7 @@ export async function post<T = any>(
     const headers = await constructHeaders(requestId, optionHeaders)
     const response = await fetch(url, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: headers['Content-Type'] === 'application/json' ? JSON.stringify(data) : data as any,
       referrerPolicy: 'no-referrer-when-downgrade',
       headers,
       ...otherOptions,

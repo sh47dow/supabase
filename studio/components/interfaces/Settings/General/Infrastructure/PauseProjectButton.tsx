@@ -49,8 +49,8 @@ const PauseProjectButton: FC<Props> = observer(({ projectRef, projectId }) => {
       })
       setLoading(false)
     } else {
-      app.onProjectPaused(projectId)
-      app.onProjectStatusUpdated(projectId, PROJECT_STATUS.GOING_DOWN)
+      app.onProjectPaused(projectRef)
+      app.onProjectStatusUpdated(projectRef, PROJECT_STATUS.GOING_DOWN)
 
       ui.setNotification({ category: 'success', message: 'Pausing project' })
       router.push(`/project/${projectRef}`)

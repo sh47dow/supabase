@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+
 import apiWrapper from 'lib/api/apiWrapper'
+import {serverSupaClient} from "../../../../../../../lib/api/supabaseClient";
 
 export default (req: NextApiRequest, res: NextApiResponse) => apiWrapper(req, res, handler)
 
@@ -10,27 +12,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     case 'POST':
       return handlePost(req, res)
     default:
-      res.setHeader('Allow', ['POST'])
+      res.setHeader('Allow', ['GET'])
       res.status(405).json({ data: null, error: { message: `Method ${method} Not Allowed` } })
   }
 }
 
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
   // Platform specific endpoint
-  const response = {
-    data: {
-      tier: {
-        name: 'Self Hosted',
-        prod_id: '',
-        unit_amount: 0,
-      },
-      addons: [],
-      billing: {
-        billing_cycle_anchor: undefined,
-        current_period_end: undefined,
-        current_period_start: undefined,
-      },
-    },
+  try {
+    const {path, expiresIn} = req.body
+    const result = await serverSupaClient.storage.from(req.query.bucket as string).createSignedUrl(path, expiresIn)
+    if (result.error) {
+      return res.status(400).json(result.error)
+    } else {
+      return res.status(200).json(result.data)
+    }
+  } catch (e) {
+    return res.status(400).json(e)
   }
-  return res.status(200).json(response)
 }

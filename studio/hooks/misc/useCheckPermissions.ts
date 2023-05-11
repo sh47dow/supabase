@@ -11,25 +11,26 @@ export function checkPermissions(
   data?: object,
   organizationId?: number
 ) {
-  if (!IS_PLATFORM) return true
-
-  const { ui } = useStore()
-  const orgId = organizationId ?? ui?.selectedOrganization?.id
-
-  return (ui?.permissions ?? [])
-    .filter(
-      (permission: {
-        actions: string[]
-        condition: jsonLogic.RulesLogic
-        organization_id: number
-        resources: string[]
-      }) =>
-        permission.actions.some((act) => (action ? action.match(toRegexpString(act)) : null)) &&
-        permission.resources.some((res) => resource.match(toRegexpString(res))) &&
-        permission.organization_id === orgId
-    )
-    .some(
-      ({ condition }: { condition: jsonLogic.RulesLogic }) =>
-        condition === null || jsonLogic.apply(condition, { resource_name: resource, ...data })
-    )
+  // if (!IS_PLATFORM) return true
+  //
+  // const { ui } = useStore()
+  // const orgId = organizationId ?? ui?.selectedOrganization?.id
+  //
+  // return (ui?.permissions ?? [])
+  //   .filter(
+  //     (permission: {
+  //       actions: string[]
+  //       condition: jsonLogic.RulesLogic
+  //       organization_id: number
+  //       resources: string[]
+  //     }) =>
+  //       permission.actions.some((act) => (action ? action.match(toRegexpString(act)) : null)) &&
+  //       permission.resources.some((res) => resource.match(toRegexpString(res))) &&
+  //       permission.organization_id === orgId
+  //   )
+  //   .some(
+  //     ({ condition }: { condition: jsonLogic.RulesLogic }) =>
+  //       condition === null || jsonLogic.apply(condition, { resource_name: resource, ...data })
+  //   )
+  return true
 }

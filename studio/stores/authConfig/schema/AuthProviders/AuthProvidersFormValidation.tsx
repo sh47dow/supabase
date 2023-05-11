@@ -67,6 +67,8 @@ const PROVIDER_PHONE = {
       title: 'SMS provider',
       description: 'External provider that will handle sending SMS messages',
       enum: [
+        //把阿里云永远放在第一位
+        { label: '阿里云', value: 'aliyun', icon: 'aliyun-icon.svg' },
         { label: 'Twilio', value: 'twilio', icon: 'twilio-icon.svg' },
         { label: 'Messagebird', value: 'messagebird', icon: 'messagebird-icon.svg' },
         { label: 'Textlocal', value: 'textlocal', icon: 'textlocal-icon.png' },
@@ -77,6 +79,33 @@ const PROVIDER_PHONE = {
       type: 'number',
       title: 'Rate limit for sending SMS messages',
       description: 'How many SMS messages can be sent per hour',
+    },
+
+    // Aliyun
+    SMS_ALIYUN_REGION: {
+      type: 'string',
+      title: '地域ID',
+      show: {
+        key: 'SMS_PROVIDER',
+        matches: 'aliyun',
+      },
+      description: '如:cn-shanghai',
+    },
+    SMS_ALIYUN_AK_ID: {
+      type: 'string',
+      title: 'AccessKey ID',
+      show: {
+        key: 'SMS_PROVIDER',
+        matches: 'aliyun',
+      },
+    },
+    SMS_ALIYUN_AK_SECRET: {
+      type: 'string',
+      title: 'AccessKey Secret',
+      show: {
+        key: 'SMS_PROVIDER',
+        matches: 'aliyun',
+      },
     },
 
     // Twilio
@@ -188,16 +217,75 @@ const PROVIDER_PHONE = {
       description: 'Number of digits in OTP',
       units: 'digits',
     },
+    SMS_ALIYUN_SIGN_NAME: {
+      type: 'string',
+      title: '短信签名名称',
+      show: {
+        key: 'SMS_PROVIDER',
+        matches: 'aliyun',
+      },
+      description: '请先申请短信签名和短信模板，并确保签名和模板已经审核通过',
+    },
+    SMS_ALIYUN_TEMPLATE_CODE: {
+      type: 'string',
+      title: '短信模板CODE',
+      show: {
+        key: 'SMS_PROVIDER',
+        matches: 'aliyun',
+      },
+      description: '建议使用通用的短信验证码模板',
+    },
+    //SMS 消息只有aliyun没有，目前将matches做成数组形式（原先是字符串），在页面会用typeof方法判断显示与否
     SMS_TEMPLATE: {
       title: 'SMS Message',
       type: 'string',
       description: 'To format the OTP code use `{{ .Code }}`',
+      show: {
+        key: 'SMS_PROVIDER',
+        matches: ['twilio','messagebird','textlocal','vonage'],
+      },
     },
   },
   validationSchema: object().shape({
     EXTERNAL_PHONE_ENABLED: boolean().required(),
     SMS_PROVIDER: string().required(),
 
+    // aliyun
+    SMS_ALIYUN_REGION: string().when(['EXTERNAL_PHONE_ENABLED', 'SMS_PROVIDER'], {
+      is: (EXTERNAL_PHONE_ENABLED: boolean, SMS_PROVIDER: string) => {
+        return EXTERNAL_PHONE_ENABLED && SMS_PROVIDER === 'aliyun'
+      },
+      then: (schema) => schema.required('地域ID是必填项'),
+      otherwise: (schema) => schema,
+    }),
+    SMS_ALIYUN_AK_ID: string().when(['EXTERNAL_PHONE_ENABLED', 'SMS_PROVIDER'], {
+      is: (EXTERNAL_PHONE_ENABLED: boolean, SMS_PROVIDER: string) => {
+        return EXTERNAL_PHONE_ENABLED && SMS_PROVIDER === 'aliyun'
+      },
+      then: (schema) => schema.required('AccessKey ID是必填项'),
+      otherwise: (schema) => schema,
+    }),
+    SMS_ALIYUN_AK_SECRET: string().when(['EXTERNAL_PHONE_ENABLED', 'SMS_PROVIDER'], {
+      is: (EXTERNAL_PHONE_ENABLED: boolean, SMS_PROVIDER: string) => {
+        return EXTERNAL_PHONE_ENABLED && SMS_PROVIDER === 'aliyun'
+      },
+      then: (schema) => schema.required('AccessKey Secret是必填项'),
+      otherwise: (schema) => schema,
+    }),
+    SMS_ALIYUN_SIGN_NAME: string().when(['EXTERNAL_PHONE_ENABLED', 'SMS_PROVIDER'], {
+      is: (EXTERNAL_PHONE_ENABLED: boolean, SMS_PROVIDER: string) => {
+        return EXTERNAL_PHONE_ENABLED && SMS_PROVIDER === 'aliyun'
+      },
+      then: (schema) => schema.required('短信签名名称是必填项'),
+      otherwise: (schema) => schema,
+    }),
+    SMS_ALIYUN_TEMPLATE_CODE: string().when(['EXTERNAL_PHONE_ENABLED', 'SMS_PROVIDER'], {
+      is: (EXTERNAL_PHONE_ENABLED: boolean, SMS_PROVIDER: string) => {
+        return EXTERNAL_PHONE_ENABLED && SMS_PROVIDER === 'aliyun'
+      },
+      then: (schema) => schema.required('短信模板CODE是必填项'),
+      otherwise: (schema) => schema,
+    }),
     // Twilio
     SMS_TWILIO_ACCOUNT_SID: string().when(['EXTERNAL_PHONE_ENABLED', 'SMS_PROVIDER'], {
       is: (EXTERNAL_PHONE_ENABLED: boolean, SMS_PROVIDER: string) => {
@@ -285,6 +373,53 @@ const PROVIDER_PHONE = {
     iconKey: 'phone-icon4',
     helper: `To complete setup, add this authorisation callback URL to your app's configuration in the Apple Developer Console.
             [Learn more](https://supabase.com/docs/guides/auth/social-login/auth-apple#configure-your-services-id)`,
+  },
+}
+
+//provider wechat
+
+const EXTERNAL_PROVIDER_WECHAT = {
+  $schema: JSON_SCHEMA_VERSION,
+  type: 'object',
+  title: '微信小程序',
+  properties: {
+    EXTERNAL_WECHAT_ENABLED: {
+      title: '启用微信小程序认证',
+      type: 'boolean',
+    },
+    EXTERNAL_WECHAT_APP_ID: {
+      /**
+       * to do: change docs
+       */
+      title: 'AppId',
+      description: '微信小程序AppId',
+      type: 'string',
+    },
+    EXTERNAL_WECHAT_APP_SECRET: {
+      /**
+       * to do: change docs
+       */
+      title: 'AppSecret',
+      description: '微信小程序AppSecret',
+      type: 'string',
+      isSecret: true,
+    },
+  },
+  validationSchema: object().shape({
+    EXTERNAL_WECHAT_ENABLED: boolean().required(),
+    EXTERNAL_WECHAT_APP_ID: string().when('EXTERNAL_WECHAT_ENABLED', {
+      is: true,
+      then: (schema) => schema.required('微信小程序AppId为必填项'),
+      otherwise: (schema) => schema,
+    }),
+    EXTERNAL_WECHAT_APP_SECRET: string().when('EXTERNAL_WECHAT_ENABLED', {
+      is: true,
+      then: (schema) => schema.required('微信小程序AppSecret是必填项'),
+      otherwise: (schema) => schema,
+    }),
+  }),
+  misc: {
+    iconKey: 'wechat-icon'
   },
 }
 

@@ -122,9 +122,10 @@ class SqlEditorStore {
     else return tab.isExecuting
   }
 
-  tabsFromContentStore(contentStore, user_id) {
+  tabsFromContentStore(contentStore) {
     const snippets = contentStore
-      .sqlSnippets((x) => x.owner_id === user_id)
+        .list()
+      // .sqlSnippets((x) => x.owner_id === user_id)
       .map((snippet) => toJS(snippet))
 
     // add the welcome tab
@@ -153,10 +154,10 @@ class SqlEditorStore {
    * New action for retriving data from main db user_content
    * You need to pass the contentStore into this
    */
-  async loadRemotePersistentData(contentStore, user_id) {
+  async loadRemotePersistentData(contentStore) {
     await contentStore.load()
 
-    const tabs = this.tabsFromContentStore(contentStore, user_id)
+    const tabs = this.tabsFromContentStore(contentStore)
 
     /*
      * Reshape snippet content to fit the SqlEditorStore shape

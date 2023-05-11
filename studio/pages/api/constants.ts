@@ -1,4 +1,5 @@
-const PUBLIC_URL = new URL(process.env.SUPABASE_PUBLIC_URL || 'http://localhost:8000')
+const url = process.env.NODE_ENV === 'development' ? process.env.SUPABASE_URL : process.env.SUPABASE_PUBLIC_URL
+const PUBLIC_URL = new URL(url || 'https://localhost:8000')
 
 export const PROJECT_REST_URL = `${PUBLIC_URL.origin}/rest/v1/`
 export const PROJECT_ENDPOINT = PUBLIC_URL.host
@@ -14,3 +15,5 @@ export const DEFAULT_PROJECT = {
   region: 'local',
   inserted_at: '2021-08-02T06:40:40.646Z',
 }
+
+export const OSS_RETRY_ERRORS = ['InternalError', 'RequestTimeTooSkewedError', 'RequestTimeoutError', 'RequestError', 'ConnectionTimeoutError']

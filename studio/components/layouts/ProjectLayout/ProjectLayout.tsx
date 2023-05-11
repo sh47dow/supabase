@@ -15,6 +15,7 @@ import BuildingState from './BuildingState'
 import { ProjectContextProvider } from './ProjectContext'
 import RestoringState from './RestoringState'
 import UpgradingState from './UpgradingState'
+import ProjectPausedState from "./ProjectPausedState";
 
 interface Props {
   title?: string
@@ -43,7 +44,7 @@ const ProjectLayout = ({
     <ProjectContextProvider projectRef={projectRef}>
       <Head>
         <title>
-          {title ? `${title} | Supabase` : projectName ? `${projectName} | Supabase` : 'Supabase'}
+          {title ? `${title} | MemFire Cloud` : projectName ? `${projectName} | MemFire Cloud` : 'MemFire Cloud'}
         </title>
         <meta name="description" content="Supabase Studio" />
         <link rel="icon" href="/favicon.ico" />
@@ -53,17 +54,23 @@ const ProjectLayout = ({
         {!hideIconBar && <NavigationBar />}
 
         {/* Product menu bar */}
-        <MenuBarWrapper isLoading={isLoading} productMenu={productMenu}>
-          <ProductMenuBar title={product}>{productMenu}</ProductMenuBar>
-        </MenuBarWrapper>
-
-        <main
-          className="flex flex-col flex-1 w-full overflow-x-hidden"
-          style={{ height: ongoingIncident ? 'calc(100vh - 44px)' : '100vh' }}
-        >
-          {!hideHeader && <LayoutHeader />}
-          <ContentWrapper isLoading={isLoading}>{children}</ContentWrapper>
-        </main>
+        {
+          ui.selectedProject?.status === PROJECT_STATUS.ACTIVE_HEALTHY &&
+          <MenuBarWrapper isLoading={isLoading} productMenu={productMenu}>
+            <ProductMenuBar title={product}>{productMenu}</ProductMenuBar>
+          </MenuBarWrapper>
+        }
+        {
+          ui.selectedProject?.status === PROJECT_STATUS.INACTIVE ?
+          <ProjectPausedState project={ui.selectedProject}/> :
+          <main
+            className="flex flex-col flex-1 w-full overflow-x-hidden"
+            style={{ height: ongoingIncident ? 'calc(100vh - 44px)' : '100vh' }}
+          >
+            {/*{!hideHeader && <LayoutHeader />}*/}
+            <ContentWrapper isLoading={isLoading}>{children}</ContentWrapper>
+          </main>
+        }
       </div>
     </ProjectContextProvider>
   )
@@ -111,6 +118,11 @@ const ContentWrapper: FC<ContentWrapperProps> = observer(({ isLoading, children 
     '/project/[ref]/settings/billing/update',
     '/project/[ref]/settings/billing/update/free',
     '/project/[ref]/settings/billing/update/pro',
+    '/project/[ref]/hosting',
+    '/project/[ref]/functions',
+    '/project/[ref]/functions/[id]',
+    '/project/[ref]/storage/buckets',
+    '/project/[ref]/storage/buckets/[id]',
   ]
 
   const requiresDbConnection: boolean = router.pathname !== '/project/[ref]/settings/general'

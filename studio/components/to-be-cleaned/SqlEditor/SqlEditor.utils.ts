@@ -1,5 +1,6 @@
 import { SqlSnippets, UserContent } from 'types'
 import { NEW_SQL_SNIPPET_SKELETON } from './SqlEditor.constants'
+import {uuidv4} from "../../../lib/helpers";
 
 export const createSqlSnippetSkeleton = ({
   name,
@@ -16,7 +17,7 @@ export const createSqlSnippetSkeleton = ({
     ...(owner_id && { owner_id }),
     content: {
       ...NEW_SQL_SNIPPET_SKELETON.content,
-      content_id: '',
+      content_id: uuidv4(),
       sql: sql ?? '',
     },
   }

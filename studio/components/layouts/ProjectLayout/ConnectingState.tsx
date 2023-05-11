@@ -40,7 +40,7 @@ const ConnectingState: FC<Props> = ({ project }) => {
     const result = await pingPostgrest(project.ref, { kpsVersion: project.kpsVersion })
     if (result) {
       clearInterval(checkProjectConnectionIntervalRef.current)
-      app.onProjectPostgrestStatusUpdated(project.id, 'ONLINE')
+      app.onProjectPostgrestStatusUpdated(project.ref, 'ONLINE')
     }
   }
 
@@ -71,75 +71,75 @@ const ConnectingState: FC<Props> = ({ project }) => {
                 <p className="text-center">Connecting to {project.name}</p>
                 <p
                   className="cursor-pointer text-center text-sm text-scale-1100 opacity-60 transition hover:opacity-100"
-                  onClick={() => setShowModal(true)}
+                  // onClick={() => setShowModal(true)}
                 >
                   This may take a few minutes
                 </p>
               </div>
 
-              <div className="flex flex-col items-center">
-                {showHelperButton && (
-                  <Button type="default" onClick={() => setShowModal(true)}>
-                    Still connecting?
-                  </Button>
-                )}
-              </div>
+              {/*<div className="flex flex-col items-center">*/}
+              {/*  {showHelperButton && (*/}
+              {/*    <Button type="default" onClick={() => setShowModal(true)}>*/}
+              {/*      Still connecting?*/}
+              {/*    </Button>*/}
+              {/*  )}*/}
+              {/*</div>*/}
             </div>
           </div>
         </div>
       </div>
-      <Modal
-        visible={showModal}
-        onCancel={() => setShowModal(false)}
-        header={
-          <div className="flex items-baseline gap-2">
-            <h5 className="text-sm text-scale-1200">Checking the health of your database</h5>
-          </div>
-        }
-        size="medium"
-        hideFooter
-        closable
-      >
-        <div className="py-4">
-          <Modal.Content>
-            <div className="space-y-4">
-              <p className="text-sm text-scale-1200">
-                Your project might be facing resource constraints and hence is having trouble
-                connecting. You can verify this by checking your{' '}
-                <span className="text-brand-1000">
-                  <Link href={`/project/${project.ref}/settings/database`}>
-                    <a>database's health</a>
-                  </Link>
-                </span>{' '}
-                or your remaining daily disk IO budget via a{' '}
-                <span className="text-brand-1000">
-                  <Link href={`/project/${project.ref}/reports`}>
-                    <a>customizable project report</a>
-                  </Link>
-                </span>
-                .
-              </p>
-              <p className="text-sm text-scale-1200">
-                If your project is facing resource constraints, you can{' '}
-                <span className="text-brand-1000">
-                  <Link href={`/project/${project.ref}/reports`}>
-                    <a>upgrade</a>
-                  </Link>
-                </span>{' '}
-                your project's subscription to a Pro for access to larger compute sizes.
-              </p>
-              <p className="text-sm text-scale-1200">
-                However, if your project still fails to connect thereafter, you can open a support
-                ticket{' '}
-                <span className="text-brand-1000">
-                  <Link href={`/support/new?ref=${project.ref}`}>here</Link>
-                </span>
-                .
-              </p>
-            </div>
-          </Modal.Content>
-        </div>
-      </Modal>
+      {/*<Modal*/}
+      {/*  visible={showModal}*/}
+      {/*  onCancel={() => setShowModal(false)}*/}
+      {/*  header={*/}
+      {/*    <div className="flex items-baseline gap-2">*/}
+      {/*      <h5 className="text-sm text-scale-1200">Checking the health of your database</h5>*/}
+      {/*    </div>*/}
+      {/*  }*/}
+      {/*  size="medium"*/}
+      {/*  hideFooter*/}
+      {/*  closable*/}
+      {/*>*/}
+      {/*  <div className="py-4">*/}
+      {/*    <Modal.Content>*/}
+      {/*      <div className="space-y-4">*/}
+      {/*        <p className="text-sm text-scale-1200">*/}
+      {/*          Your project might be facing resource constraints and hence is having trouble*/}
+      {/*          connecting. You can verify this by checking your{' '}*/}
+      {/*          <span className="text-brand-1000">*/}
+      {/*            <Link href={`/project/${project.ref}/settings/database`}>*/}
+      {/*              <a>database's health</a>*/}
+      {/*            </Link>*/}
+      {/*          </span>{' '}*/}
+      {/*          or your remaining daily disk IO budget via a{' '}*/}
+      {/*          <span className="text-brand-1000">*/}
+      {/*            <Link href={`/project/${project.ref}/reports`}>*/}
+      {/*              <a>customizable project report</a>*/}
+      {/*            </Link>*/}
+      {/*          </span>*/}
+      {/*          .*/}
+      {/*        </p>*/}
+      {/*        <p className="text-sm text-scale-1200">*/}
+      {/*          If your project is facing resource constraints, you can{' '}*/}
+      {/*          <span className="text-brand-1000">*/}
+      {/*            <Link href={`/project/${project.ref}/reports`}>*/}
+      {/*              <a>upgrade</a>*/}
+      {/*            </Link>*/}
+      {/*          </span>{' '}*/}
+      {/*          your project's subscription to a Pro for access to larger compute sizes.*/}
+      {/*        </p>*/}
+      {/*        <p className="text-sm text-scale-1200">*/}
+      {/*          However, if your project still fails to connect thereafter, you can open a support*/}
+      {/*          ticket{' '}*/}
+      {/*          <span className="text-brand-1000">*/}
+      {/*            <Link href={`/support/new?ref=${project.ref}`}>here</Link>*/}
+      {/*          </span>*/}
+      {/*          .*/}
+      {/*        </p>*/}
+      {/*      </div>*/}
+      {/*    </Modal.Content>*/}
+      {/*  </div>*/}
+      {/*</Modal>*/}
     </>
   )
 }

@@ -37,9 +37,9 @@ const Home: NextPageWithLayout = () => {
 
       {project?.status === PROJECT_STATUS.INACTIVE && <ProjectPausedState project={project} />}
 
-      <div className="mx-6">
-        {IS_PLATFORM && project?.status !== PROJECT_STATUS.INACTIVE && <ProjectUsageSection />}
-      </div>
+      {/*<div className="mx-6">*/}
+      {/*  {IS_PLATFORM && project?.status !== PROJECT_STATUS.INACTIVE && <ProjectUsageSection />}*/}
+      {/*</div>*/}
 
       <div className="space-y-8">
         <div className="mx-6">

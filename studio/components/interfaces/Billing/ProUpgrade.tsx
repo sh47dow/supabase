@@ -194,7 +194,7 @@ const ProUpgrade: FC<Props> = ({
       })
     } else {
       if (isChangingComputeSize) {
-        app.onProjectStatusUpdated(projectId, PROJECT_STATUS.RESTORING)
+        app.onProjectStatusUpdated(projectRef || '', PROJECT_STATUS.RESTORING)
         ui.setNotification({
           category: 'success',
           message:

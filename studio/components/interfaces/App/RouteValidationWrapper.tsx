@@ -59,12 +59,13 @@ const RouteValidationWrapper: FC = ({ children }) => {
 
     if (projectsInitialized && projectRef) {
       // Check validity of project that the user is trying to access
-      const projects = app.projects.list()
-      const isValidProject = projects.some((project: Project) => project.ref === projectRef)
+      // const projects = app.projects.list()
+      // const isValidProject = projects.some((project: Project) => project.ref === projectRef)
 
+      const isValidProject = projectRef === 'default'
       if (!isValidProject) {
         ui.setNotification({ category: 'error', message: 'This project does not exist' })
-        router.push('/projects')
+        router.push('/project/default')
         return
       }
     }

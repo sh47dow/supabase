@@ -163,6 +163,7 @@ function Radio({
   align = 'vertical',
   optionalLabel,
   addOnBefore,
+  className,
 }: InputProps) {
   const __styles = styleHandler('radio')
 
@@ -199,6 +200,7 @@ function Radio({
           __styles.variants[type].container.base,
           // __styles.variants[type].container.align[align],
           type === 'list' && !hidden && __styles.variants[type].container.size[size],
+          className || '',
         ]
 
         classes.push(__styles.variants[type].base)

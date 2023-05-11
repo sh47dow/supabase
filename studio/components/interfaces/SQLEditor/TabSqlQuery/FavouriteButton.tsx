@@ -45,10 +45,10 @@ const FavouriteButton = () => {
        */
       const { query, name, desc } = sqlEditorStore.activeTab || {}
       sqlEditorStore.addToFavorite(id, query, name, desc)
-      Telemetry.sendEvent(
-        { category: 'sql_editor', action: 'sql_favourited', label: name },
-        ui.googleAnalyticsProps
-      )
+      // Telemetry.sendEvent(
+      //   { category: 'sql_editor', action: 'sql_favourited', label: name },
+      //   ui.googleAnalyticsProps
+      // )
 
       /*
        * reload sql data in store and re-select tab

@@ -17,12 +17,12 @@ const DisplayConfigSettings = () => {
     projectRef,
   })
 
-  const {
-    data,
-    isError: isJwtSecretUpdateStatusError,
-    isLoading: isJwtSecretUpdateStatusLoading,
-  } = useJwtSecretUpdatingStatusQuery({ projectRef })
-  const jwtSecretUpdateStatus = data?.jwtSecretUpdateStatus
+  // const {
+  //   data,
+  //   isError: isJwtSecretUpdateStatusError,
+  //   isLoading: isJwtSecretUpdateStatusLoading,
+  // } = useJwtSecretUpdatingStatusQuery({ projectRef })
+  const jwtSecretUpdateStatus = JwtSecretUpdateStatus.Updated
 
   const isNotUpdatingJwtSecret =
     jwtSecretUpdateStatus === undefined || jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updated
@@ -36,7 +36,7 @@ const DisplayConfigSettings = () => {
 
   return (
     <ConfigContentWrapper>
-      {isProjectSettingsError || isJwtSecretUpdateStatusError ? (
+      {isProjectSettingsError ? (
         <div className="flex items-center justify-center py-8 space-x-2">
           <IconAlertCircle size={16} strokeWidth={1.5} />
           <p className="text-sm text-scale-1100">
@@ -45,7 +45,7 @@ const DisplayConfigSettings = () => {
               : 'Failed to update JWT secret'}
           </p>
         </div>
-      ) : isProjectSettingsLoading || isJwtSecretUpdateStatusLoading ? (
+      ) : isProjectSettingsLoading ? (
         <div className="flex items-center justify-center py-8 space-x-2">
           <IconLoader className="animate-spin" size={16} strokeWidth={1.5} />
           <p className="text-sm text-scale-1100">
@@ -66,25 +66,25 @@ const DisplayConfigSettings = () => {
               layout="horizontal"
             />
           </Panel.Content>
-          <Panel.Content className="border-t border-panel-border-interior-light dark:border-panel-border-interior-dark">
-            <Input
-              label="JWT Secret"
-              readOnly
-              copy={isNotUpdatingJwtSecret}
-              reveal={isNotUpdatingJwtSecret}
-              disabled
-              value={
-                jwtSecretUpdateStatus === JwtSecretUpdateStatus.Failed
-                  ? 'JWT secret update failed'
-                  : jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updating
-                  ? 'Updating JWT secret...'
-                  : jwtSecret
-              }
-              className="input-mono"
-              descriptionText="Used to decode your JWTs. You can also use this to mint your own JWTs."
-              layout="horizontal"
-            />
-          </Panel.Content>
+          {/*<Panel.Content className="border-t border-panel-border-interior-light dark:border-panel-border-interior-dark">*/}
+          {/*  <Input*/}
+          {/*    label="JWT Secret"*/}
+          {/*    readOnly*/}
+          {/*    copy={isNotUpdatingJwtSecret}*/}
+          {/*    reveal={isNotUpdatingJwtSecret}*/}
+          {/*    disabled*/}
+          {/*    value={*/}
+          {/*      jwtSecretUpdateStatus === JwtSecretUpdateStatus.Failed*/}
+          {/*        ? 'JWT secret update failed'*/}
+          {/*        : jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updating*/}
+          {/*        ? 'Updating JWT secret...'*/}
+          {/*        : jwtSecret*/}
+          {/*    }*/}
+          {/*    className="input-mono"*/}
+          {/*    descriptionText="Used to decode your JWTs. You can also use this to mint your own JWTs."*/}
+          {/*    layout="horizontal"*/}
+          {/*  />*/}
+          {/*</Panel.Content>*/}
         </>
       )}
     </ConfigContentWrapper>

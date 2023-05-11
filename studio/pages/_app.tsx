@@ -40,6 +40,7 @@ import { PortalToast, RouteValidationWrapper, AppBannerWrapper } from 'component
 import PageTelemetry from 'components/ui/PageTelemetry'
 import FlagProvider from 'components/ui/Flag/FlagProvider'
 import useAutoAuthRedirect from 'hooks/misc/useAutoAuthRedirect'
+import {ThemeProvider} from "ui";
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
@@ -98,27 +99,27 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
               </Head>
 
-              <Script
-                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}`}
-                strategy="afterInteractive"
-              />
-              <Script id="google-analytics" strategy="afterInteractive">
-                {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){window.dataLayer.push(arguments);}
-                gtag('js', new Date());
+              {/*<Script*/}
+              {/*  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}`}*/}
+              {/*  strategy="afterInteractive"*/}
+              {/*/>*/}
+              {/*<Script id="google-analytics" strategy="afterInteractive">*/}
+              {/*  {`*/}
+              {/*  window.dataLayer = window.dataLayer || [];*/}
+              {/*  function gtag(){window.dataLayer.push(arguments);}*/}
+              {/*  gtag('js', new Date());*/}
 
-                gtag('config', '${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}', { 'send_page_view': false });
-              `}
-              </Script>
+              {/*  gtag('config', '${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}', { 'send_page_view': false });*/}
+              {/*`}*/}
+              {/*</Script>*/}
 
-              <PageTelemetry>
+              {/*<PageTelemetry>*/}
                 <RouteValidationWrapper>
                   <AppBannerWrapper>{getLayout(<Component {...pageProps} />)}</AppBannerWrapper>
                 </RouteValidationWrapper>
-              </PageTelemetry>
+              {/*</PageTelemetry>*/}
 
-              <HCaptchaLoadedStore />
+              {/*<HCaptchaLoadedStore />*/}
               <PortalToast />
               <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
             </FlagProvider>

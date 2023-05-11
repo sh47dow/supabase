@@ -34,7 +34,7 @@ const BackupItem: FC<Props> = ({ projectRef, backup, index }) => {
     try {
       post(`${API_URL}/database/${projectRef}/backups/restore`, backup).then(() => {
         setTimeout(() => {
-          app.onProjectStatusUpdated(projectId, PROJECT_STATUS.RESTORING)
+          app.onProjectStatusUpdated(projectRef, PROJECT_STATUS.RESTORING)
           ui.setNotification({
             category: 'success',
             message: `Restoring database back to ${dayjs(backup.inserted_at).format(

@@ -45,7 +45,7 @@ export default class ProjectStore extends PostgresMetaInterface<Project> {
     this.data = formattedValue
   }
 
-  async fetchDetail(projectRef: string, callback?: (project: Project) => void) {
+  async fetchDetail(projectRef: string, onSuccess?: (project: Project) => void, onError?: (error: any) => void) {
     const url = `${this.url}/${projectRef}`
     const headers = constructHeaders(this.headers)
     const response = await get(url, { headers })
@@ -55,14 +55,16 @@ export default class ProjectStore extends PostgresMetaInterface<Project> {
       // to improve UX, we wait for PingPostgrest result before continue
       project.postgrestStatus = await this.pingPostgrest(project)
       // update project detail by key id
-      this.data[project.id] = project
+      this.data[project.ref] = project
 
-      callback?.(project)
+      onSuccess?.(project)
 
       // lazy fetches
       if (IS_PLATFORM) {
         this.fetchSubscriptionTier(project)
       }
+    } else {
+      onError?.(response.error)
     }
   }
 
@@ -87,9 +89,9 @@ export default class ProjectStore extends PostgresMetaInterface<Project> {
           }
         }
         // update subscription_tier key
-        const clone = cloneDeep(this.data[projectId])
+        const clone = cloneDeep(this.data[projectRef])
         clone.subscription_tier = subscriptionInfo.tier.supabase_prod_id
-        this.data[projectId] = clone
+        this.data[projectRef] = clone
       }
     }
   }

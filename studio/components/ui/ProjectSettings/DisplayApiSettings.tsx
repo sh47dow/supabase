@@ -16,17 +16,17 @@ const DisplayApiSettings = () => {
     isError: isProjectSettingsError,
     isLoading: isProjectSettingsLoading,
   } = useProjectSettingsQuery({ projectRef })
-  const {
-    data,
-    isError: isJwtSecretUpdateStatusError,
-    isLoading: isJwtSecretUpdateStatusLoading,
-  } = useJwtSecretUpdatingStatusQuery({ projectRef })
-  const jwtSecretUpdateStatus = data?.jwtSecretUpdateStatus
+  // const {
+  //   data,
+  //   isError: isJwtSecretUpdateStatusError,
+  //   isLoading: isJwtSecretUpdateStatusLoading,
+  // } = useJwtSecretUpdatingStatusQuery({ projectRef })
+  // const jwtSecretUpdateStatus = data?.jwtSecretUpdateStatus
 
   const canReadAPIKeys = checkPermissions(PermissionAction.READ, 'service_api_keys')
 
-  const isNotUpdatingJwtSecret =
-    jwtSecretUpdateStatus === undefined || jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updated
+  const isNotUpdatingJwtSecret = true
+    // jwtSecretUpdateStatus === undefined || jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updated
   // Get the API service
   const apiService = (settings?.services ?? []).find(
     (x: any) => x.app.id == DEFAULT_PROJECT_API_SERVICE_ID
@@ -48,14 +48,14 @@ const DisplayApiSettings = () => {
         </div>
       }
     >
-      {isProjectSettingsError || isJwtSecretUpdateStatusError ? (
+      {isProjectSettingsError ? (
         <div className="flex items-center justify-center py-8 space-x-2">
           <IconAlertCircle size={16} strokeWidth={1.5} />
           <p className="text-sm text-scale-1100">
             {isProjectSettingsError ? 'Failed to retrieve API keys' : 'Failed to update JWT secret'}
           </p>
         </div>
-      ) : isApiKeysEmpty || isProjectSettingsLoading || isJwtSecretUpdateStatusLoading ? (
+      ) : isApiKeysEmpty || isProjectSettingsLoading ? (
         <div className="flex items-center justify-center py-8 space-x-2">
           <IconLoader className="animate-spin" size={16} strokeWidth={1.5} />
           <p className="text-sm text-scale-1100">
@@ -99,10 +99,10 @@ const DisplayApiSettings = () => {
               value={
                 !canReadAPIKeys
                   ? 'You need additional permissions to view API keys'
-                  : jwtSecretUpdateStatus === JwtSecretUpdateStatus.Failed
-                  ? 'JWT secret update failed, new API key may have issues'
-                  : jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updating
-                  ? 'Updating JWT secret...'
+                  // : jwtSecretUpdateStatus === JwtSecretUpdateStatus.Failed
+                  // ? 'JWT secret update failed, new API key may have issues'
+                  // : jwtSecretUpdateStatus === JwtSecretUpdateStatus.Updating
+                  // ? 'Updating JWT secret...'
                   : x.api_key
               }
               onChange={() => {}}

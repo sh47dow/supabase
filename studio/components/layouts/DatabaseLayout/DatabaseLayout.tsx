@@ -7,7 +7,8 @@ import BaseLayout from '../'
 import Error from 'components/ui/Error'
 import ProductMenu from 'components/ui/ProductMenu'
 import { generateDatabaseMenu } from './DatabaseMenu.utils'
-import { IS_PLATFORM } from 'lib/constants'
+import {IS_PLATFORM, PROJECT_STATUS} from 'lib/constants'
+import ProjectPausedState from "../ProjectLayout/ProjectPausedState";
 
 interface Props {
   title?: string
@@ -61,7 +62,11 @@ const DatabaseLayout: FC<Props> = ({ title, children }) => {
   if (error) {
     return (
       <BaseLayout>
-        <Error error={error} />
+        {
+          ui.selectedProject?.status === PROJECT_STATUS.INACTIVE ?
+            <ProjectPausedState project={ui.selectedProject!}/> :
+            <Error error={error} />
+        }
       </BaseLayout>
     )
   }

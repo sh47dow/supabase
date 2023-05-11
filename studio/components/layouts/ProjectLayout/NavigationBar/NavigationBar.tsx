@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FC } from 'react'
+import {FC, useEffect, useState} from 'react'
 import { isUndefined } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { useRouter } from 'next/router'
@@ -14,6 +14,7 @@ import {
 } from './NavigationBar.utils'
 import NavigationIconButton from './NavigationIconButton'
 import { useParams } from 'hooks/misc/useParams'
+import {getDomain} from "../../../../lib/helpers";
 
 interface Props {}
 
@@ -21,6 +22,7 @@ const NavigationBar: FC<Props> = ({}) => {
   const router = useRouter()
   const { ref: projectRef } = useParams()
   const { ui } = useStore()
+  const [cloudDomain, setCloudDomain] = useState('')
   const projectBaseInfo = ui.selectedProjectBaseInfo
 
   const ongoingIncident = useFlag('ongoingIncident')
@@ -29,6 +31,10 @@ const NavigationBar: FC<Props> = ({}) => {
   const toolRoutes = generateToolRoutes(projectRef, projectBaseInfo)
   const productRoutes = generateProductRoutes(projectRef, projectBaseInfo)
   const otherRoutes = generateOtherRoutes(projectRef, projectBaseInfo)
+
+  useEffect(() => {
+    setCloudDomain(getDomain())
+  }, [])
 
   return (
     <div
@@ -39,10 +45,10 @@ const NavigationBar: FC<Props> = ({}) => {
       ].join(' ')}
     >
       <ul className="flex flex-col space-y-2">
-        <Link href="/projects">
+        <Link href={ cloudDomain }>
           <a className="block">
             <img
-              src="/img/supabase-logo.svg"
+              src="/img/memfire-logo.svg"
               alt="Supabase"
               className="mx-auto h-[40px] w-6 cursor-pointer rounded"
             />
@@ -83,42 +89,42 @@ const NavigationBar: FC<Props> = ({}) => {
           />
         ))}
       </ul>
-      <ul className="flex flex-col space-y-2">
-        <Dropdown
-          side="right"
-          align="start"
-          overlay={
-            <>
-              {IS_PLATFORM && (
-                <>
-                  <Link href="/account/me">
-                    <Dropdown.Item key="header" icon={<IconSettings size={14} strokeWidth={1.5} />}>
-                      Account Preferences
-                    </Dropdown.Item>
-                  </Link>
-                  <Dropdown.Separator />
-                </>
-              )}
-              <Dropdown.Label>Theme</Dropdown.Label>
-              <Dropdown.RadioGroup
-                key="theme"
-                value={ui.themeOption}
-                onChange={(e: any) => ui.onThemeOptionChange(e)}
-              >
-                <Dropdown.Radio value="system">System default</Dropdown.Radio>
-                <Dropdown.Radio value="dark">Dark</Dropdown.Radio>
-                <Dropdown.Radio value="light">Light</Dropdown.Radio>
-              </Dropdown.RadioGroup>
-            </>
-          }
-        >
-          <Button as="span" type="text" size="tiny">
-            <div className="py-1">
-              <IconUser size={18} strokeWidth={2} />
-            </div>
-          </Button>
-        </Dropdown>
-      </ul>
+      {/*<ul className="flex flex-col space-y-2">*/}
+      {/*  <Dropdown*/}
+      {/*    side="right"*/}
+      {/*    align="start"*/}
+      {/*    overlay={*/}
+      {/*      <>*/}
+      {/*        {IS_PLATFORM && (*/}
+      {/*          <>*/}
+      {/*            <Link href="/account/me">*/}
+      {/*              <Dropdown.Item key="header" icon={<IconSettings size={14} strokeWidth={1.5} />}>*/}
+      {/*                Account Preferences*/}
+      {/*              </Dropdown.Item>*/}
+      {/*            </Link>*/}
+      {/*            <Dropdown.Separator />*/}
+      {/*          </>*/}
+      {/*        )}*/}
+      {/*        <Dropdown.Label>Theme</Dropdown.Label>*/}
+      {/*        <Dropdown.RadioGroup*/}
+      {/*          key="theme"*/}
+      {/*          value={ui.themeOption}*/}
+      {/*          onChange={(e: any) => ui.onThemeOptionChange(e)}*/}
+      {/*        >*/}
+      {/*          <Dropdown.Radio value="system">System default</Dropdown.Radio>*/}
+      {/*          <Dropdown.Radio value="dark">Dark</Dropdown.Radio>*/}
+      {/*          <Dropdown.Radio value="light">Light</Dropdown.Radio>*/}
+      {/*        </Dropdown.RadioGroup>*/}
+      {/*      </>*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    <Button as="span" type="text" size="tiny">*/}
+      {/*      <div className="py-1">*/}
+      {/*        <IconUser size={18} strokeWidth={2} />*/}
+      {/*      </div>*/}
+      {/*    </Button>*/}
+      {/*  </Dropdown>*/}
+      {/*</ul>*/}
     </div>
   )
 }

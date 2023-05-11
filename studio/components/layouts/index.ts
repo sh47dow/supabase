@@ -17,6 +17,7 @@ import BillingLayout from './BillingLayout'
 import LogsLayout from './LogsLayout/LogsLayout'
 import ReportsLayout from './ReportsLayout/ReportsLayout'
 import OrganizationLayout from './OrganizationLayout'
+import HostingLayout from './HostingLayout'
 
 export {
   ProjectLayoutWithAuth,
@@ -38,6 +39,7 @@ export {
   LogsLayout,
   ReportsLayout,
   OrganizationLayout,
+  HostingLayout
 }
 
 export default ProjectLayout

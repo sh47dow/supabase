@@ -1,4 +1,5 @@
 import * as React from 'react'
+import ShimmeringLoader from "../ui/ShimmeringLoader";
 
 type TableProps = {
   body: JSX.Element | JSX.Element[]
@@ -9,6 +10,7 @@ type TableProps = {
   headTrClasses?: string
   bodyClassName?: string
   style?: React.StyleHTMLAttributes<HTMLTableElement>
+  loading?: boolean
 }
 
 function Table({
@@ -20,6 +22,7 @@ function Table({
   headTrClasses,
   bodyClassName,
   style,
+  loading,
 }: TableProps) {
   let containerClasses = ['table-container']
   if (containerClassName) containerClasses.push(containerClassName)
@@ -34,7 +37,17 @@ function Table({
         <thead>
           <tr className={headTrClasses}>{head}</tr>
         </thead>
-        <tbody className={bodyClassName}>{body}</tbody>
+        <tbody className={bodyClassName}>{
+          loading ? (
+            <tr>
+              <td colSpan={99} className="space-y-1">
+                <ShimmeringLoader />
+                <ShimmeringLoader />
+                <ShimmeringLoader />
+              </td>
+            </tr>
+          ) : body
+        }</tbody>
       </table>
     </div>
   )
@@ -61,7 +74,7 @@ type TrProps = {
   className?: string
   hoverable?: boolean
   style?: React.CSSProperties
-  onClick?: () => void
+  onClick?: (e: any) => void
 }
 
 const Tr: React.FC<TrProps> = ({ children, className, onClick, style, hoverable }) => {

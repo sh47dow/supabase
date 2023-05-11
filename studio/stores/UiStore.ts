@@ -2,7 +2,7 @@ import { uuidv4 } from 'lib/helpers'
 import { action, makeAutoObservable } from 'mobx'
 import { Project, Notification, User, Organization, ProjectBase, Permission } from 'types'
 import { IRootStore } from './RootStore'
-import Telemetry, { GoogleAnalyticsProps } from 'lib/telemetry'
+// import Telemetry, { GoogleAnalyticsProps } from 'lib/telemetry'
 
 export interface IUiStore {
   language: 'en-US'
@@ -17,7 +17,7 @@ export interface IUiStore {
   notification?: Notification
   permissions?: Permission[]
 
-  googleAnalyticsProps?: GoogleAnalyticsProps
+  // googleAnalyticsProps?: GoogleAnalyticsProps
 
   load: () => void
   setTheme: (theme: 'dark' | 'light') => void
@@ -25,7 +25,7 @@ export interface IUiStore {
   setProjectRef: (ref?: string) => void
   setOrganizationSlug: (slug?: string) => void
   setNotification: (notification: Notification) => string
-  setProfile: (value: User) => void
+  // setProfile: (value: User) => void
   setPermissions: (permissions?: Permission[]) => void
   setGaClientId: (clientId?: string) => void
 }
@@ -156,9 +156,9 @@ export default class UiStore implements IUiStore {
     return id
   }
 
-  setProfile(value: User) {
-    Telemetry.sendIdentify(value, this.googleAnalyticsProps)
-  }
+  // setProfile(value: User) {
+  //   Telemetry.sendIdentify(value, this.googleAnalyticsProps)
+  // }
 
   setPermissions(permissions?: any) {
     this.permissions = permissions

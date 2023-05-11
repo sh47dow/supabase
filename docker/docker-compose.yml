@@ -7,28 +7,28 @@
 version: "3.8"
 
 services:
-  studio:
-    container_name: supabase-studio
-    image: supabase/studio:20230216-e731b77
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD", "node", "-e", "require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" ]
-      timeout: 5s
-      interval: 5s
-      retries: 3
-    ports:
-      - ${STUDIO_PORT}:3000/tcp
-    environment:
-      STUDIO_PG_META_URL: http://meta:8080
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
-      DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
-      DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
-
-      SUPABASE_URL: http://kong:8000
-      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
-      SUPABASE_ANON_KEY: ${ANON_KEY}
-      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+#  studio:
+#    container_name: supabase-studio
+#    image: supabase/studio:20230216-e731b77
+#    restart: unless-stopped
+#    healthcheck:
+#      test: [ "CMD", "node", "-e", "require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" ]
+#      timeout: 5s
+#      interval: 5s
+#      retries: 3
+#    ports:
+#      - ${STUDIO_PORT}:3000/tcp
+#    environment:
+#      STUDIO_PG_META_URL: http://meta:8080
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#
+#      DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
+#      DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
+#
+#      SUPABASE_URL: http://kong:8000
+#      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
+#      SUPABASE_ANON_KEY: ${ANON_KEY}
+#      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
 
   kong:
     container_name: supabase-kong

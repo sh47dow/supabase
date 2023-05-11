@@ -1,6 +1,6 @@
-import EdgeFunctionDetails from './EdgeFunctionDetails/EdgeFunctionDetails'
-import EdgeFunctionsListItem from './EdgeFunctionsListItem'
-import FunctionsEmptyState from './FunctionsEmptyState'
-import TerminalInstructions from './TerminalInstructions'
+import FunctionsListItem from './FunctionsListItem'
+import {FunctionDetailContent} from './EdgeFunctionDetails/FunctionDetailContent'
+import {EnvConfig} from './EdgeFunctionDetails/EnvConfig'
+import {FunctionEditSidePanel} from "./FunctionEditSidePanel";
 
-export { EdgeFunctionDetails, EdgeFunctionsListItem, FunctionsEmptyState, TerminalInstructions }
+export { FunctionsListItem, FunctionDetailContent, EnvConfig, FunctionEditSidePanel }

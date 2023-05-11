@@ -110,6 +110,22 @@ export const PROJECT_STATUS = {
   UPGRADING: 'UPGRADING',
 }
 
+export const MEMFIRE_STATUS = {
+  RUNNING: 'running',
+  CREATING: 'creating',
+  CREATING_DB: 'creating_db',
+  SETUP_DB: 'setuping_db',
+  SETUP_POD: 'setuping_pod',
+  SETUP_CERT: 'setuping_cert',
+  UPGRADING: 'to_upgrading',
+  UPDATING: 'to_updating',
+  DELETING: 'deleting',
+  SUSPEND: 'suspend',
+  FAILED: 'failed',
+  QUOTAEXHAUST: 'quotaexhaut',
+  ACTIVATING: 'activating'
+}
+
 export const STRIPE_PRODUCT_IDS: { [x: string]: string } = {
   FREE: process?.env?.NEXT_PUBLIC_STRIPE_FREE_TIER_ID || 'prod_Ip4vqwv3EJ7Mi0',
   PRO: process?.env?.NEXT_PUBLIC_STRIPE_PRO_TIER_ID || 'prod_IsRLOp58Z7V4XN',
@@ -146,3 +162,29 @@ export const PASSWORD_STRENGTH_PERCENTAGE = {
 export const DEFAULT_FREE_PROJECTS_LIMIT = 2
 
 export const DEFAULT_PROJECT_API_SERVICE_ID = 1
+
+export const statusFromMfToSupa = (mfStatus: string) => {
+  switch (mfStatus) {
+    case MEMFIRE_STATUS.RUNNING:
+      return PROJECT_STATUS.ACTIVE_HEALTHY
+    case MEMFIRE_STATUS.CREATING:
+    case MEMFIRE_STATUS.CREATING_DB:
+    case MEMFIRE_STATUS.SETUP_DB:
+    case MEMFIRE_STATUS.SETUP_POD:
+    case MEMFIRE_STATUS.SETUP_CERT:
+    case MEMFIRE_STATUS.UPDATING:
+      return PROJECT_STATUS.COMING_UP
+    case MEMFIRE_STATUS.UPGRADING:
+      return PROJECT_STATUS.UPGRADING
+    case MEMFIRE_STATUS.DELETING:
+      return PROJECT_STATUS.REMOVED
+    case MEMFIRE_STATUS.SUSPEND:
+      return PROJECT_STATUS.INACTIVE
+    case MEMFIRE_STATUS.FAILED:
+      return PROJECT_STATUS.RESTORATION_FAILED
+    case MEMFIRE_STATUS.ACTIVATING:
+      return PROJECT_STATUS.RESTORING
+    case MEMFIRE_STATUS.QUOTAEXHAUST:
+      return PROJECT_STATUS.UNKNOWN
+  }
+}

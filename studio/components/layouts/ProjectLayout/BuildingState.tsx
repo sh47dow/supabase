@@ -80,7 +80,7 @@ const BuildingState: FC<Props> = ({ project }) => {
                   description={
                     <p className="text-sm text-scale-1100">
                       Browse the Supabase{' '}
-                      <Link href="https://supabase.com/docs">
+                      <Link href="https://docs.memfiredb.com/">
                         <a
                           className="mb-0 text-brand-900 transition-colors hover:text-brand-1200"
                           target="_blank"
@@ -110,7 +110,7 @@ const BuildingState: FC<Props> = ({ project }) => {
                           If your dashboard hasn't connected within 2 minutes, you can open a
                           support ticket.
                         </p>
-                        <Link href="/support/new">
+                        <Link href="https://community.memfiredb.com">
                           <Button type="default">Contact support team</Button>
                         </Link>
                       </>

@@ -147,7 +147,7 @@ const ExitSurvey: FC<Props> = ({ freeTier, subscription, onSelectBack }) => {
         })
       } else {
         if (currentComputeSize !== undefined) {
-          app.onProjectStatusUpdated(projectId, PROJECT_STATUS.RESTORING)
+          app.onProjectStatusUpdated(projectRef || '', PROJECT_STATUS.RESTORING)
           ui.setNotification({
             category: 'info',
             message: getDowngradeRefundMessage(),

@@ -1,6 +1,7 @@
 import { v4 as _uuidV4 } from 'uuid'
 import { post } from 'lib/common/fetch'
 import { PASSWORD_STRENGTH, DEFAULT_MINIMUM_PASSWORD_STRENGTH, API_URL } from 'lib/constants'
+import {parse} from "cookie";
 
 export const tryParseJson = (jsonString: any) => {
   try {
@@ -51,6 +52,26 @@ export const getURL = () => {
       ? process.env.VERCEL_URL
       : 'https://app.supabase.com'
   return url.includes('http') ? url : `https://${url}`
+}
+
+export const getDomain = () => {
+  try {
+    if (typeof window !== 'undefined') {
+      let domain
+      const protocol = window.location.protocol
+      const host = window.location.origin
+      if (host.includes('localhost')) {
+        domain = 'cloud.test1.langnal.com'
+      } else {
+        domain = host.substring(host.indexOf('baseapi')).replace('baseapi', 'cloud')
+      }
+      return `https://${domain}`
+    } else {
+      return 'https://cloud.memfiredb.com'
+    }
+  } catch (e) {
+    return 'https://cloud.memfiredb.com'
+  }
 }
 
 /**
@@ -212,5 +233,17 @@ export const detectBrowser = () => {
     return 'Firefox'
   } else if (navigator.userAgent.indexOf('Safari') !== -1) {
     return 'Safari'
+  }
+}
+
+export const getCookie = (name: string) => {
+  if (!document) return undefined
+
+  const cookies = parse(document.cookie)
+  const _token = cookies['_token']
+  if (_token) {
+    return JSON.parse(_token)
+  } else {
+    return undefined
   }
 }
