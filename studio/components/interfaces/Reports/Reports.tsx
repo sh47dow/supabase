@@ -113,6 +113,7 @@ const Reports = () => {
      * This allows us to mutate these configs, like removing dates in case we do not
      * want to compare fixed dates as possible differences from saved and edited versions of report.
      */
+    debugger
     let _config = JSON.parse(JSON.stringify(config))
     let _original = JSON.parse(JSON.stringify(originalConfig))
 

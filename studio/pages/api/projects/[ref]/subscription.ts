@@ -21,11 +21,11 @@ const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = {
     data: {
       tier: {
-        key: "FREE",
+        key: "PRO",
         name: 'Self Hosted',
         prod_id: '',
         price_id: '',
-        supabase_prod_id: PRICING_TIER_PRODUCT_IDS.FREE,
+        supabase_prod_id: PRICING_TIER_PRODUCT_IDS.PRO,
         unit_amount: 0,
       },
       addons: [],

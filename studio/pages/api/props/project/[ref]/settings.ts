@@ -22,8 +22,8 @@ const handleGetAll = async (req: NextApiRequest, res: NextApiResponse) => {
   const response = {
     project: {
       ...DEFAULT_PROJECT,
-      cloud_provider: 'AWS',
-      region: 'ap-southeast-1',
+      cloud_provider: 'ALIYUN',
+      region: 'cn-shanghai',
       db_dns_name: '-',
       db_host: 'localhost',
       db_name: 'postgres',

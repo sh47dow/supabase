@@ -2,6 +2,7 @@ import {isNumber, isUndefined} from 'lodash'
 import { SupaResponse } from 'types/base'
 import { parse } from 'cookie'
 import {getCookie} from "../../helpers";
+import {IS_OFFLINE} from "../../constants";
 
 export function handleError<T>(e: any, requestId: string): SupaResponse<T> {
   const message = e?.message ? `An error has occurred: ${e.message}` : 'An error has occurred'
@@ -121,6 +122,8 @@ export async function constructHeaders(requestId: string, optionHeaders?: { [pro
   } else if (headers['Content-Type'] === 'multiple/form-data') {
     delete headers['Content-Type']
   }
+
+  if (IS_OFFLINE) return headers
 
   const hasAuthHeader = !isUndefined(optionHeaders) && 'Authorization' in optionHeaders
   if (!hasAuthHeader) {

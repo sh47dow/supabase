@@ -4,7 +4,7 @@ import apiWrapper from 'lib/api/apiWrapper'
 import { DEFAULT_PROJECT, PROJECT_REST_URL } from 'pages/api/constants'
 import {get} from "../../../../lib/common/fetch";
 import {Project} from "../../../../types";
-import {statusFromMfToSupa} from "../../../../lib/constants";
+import {IS_OFFLINE, statusFromMfToSupa} from "../../../../lib/constants";
 
 export default (req: NextApiRequest, res: NextApiResponse) => apiWrapper(req, res, handler, {withAuth: true})
 
@@ -22,6 +22,29 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
   // Platform specific endpoint
+  if (IS_OFFLINE) {
+    const response = {
+      id: 1,
+      ref: 'default',
+      name: process.env.DEFAULT_PROJECT_NAME || 'Default Project',
+      organization_id: 1,
+      cloud_provider: 'localhost',
+      status: 'ACTIVE_HEALTHY',
+      region: 'local',
+      connectionString: createDbConnectionString({
+        db_user_supabase: 'postgres',
+        db_host: 'localhost',
+        db_pass_supabase: process.env.POSTGRES_PASSWORD as string,
+        db_port: 5432,
+        db_name: 'postgres',
+        db_ssl: false,
+      }),
+      kpsVersion: 'kps-v1.0.0',
+      restUrl: PROJECT_REST_URL,
+    }
+
+    return res.status(200).json(response)
+  }
   try {
     let result = await get<{data?: Project, error?: {code: number, message: string}}>(
       `${process.env.MEMFIRE_CLOUD_API_URL}/api/v2/projects/${process.env.BASE_PROJECT_ID}`, {

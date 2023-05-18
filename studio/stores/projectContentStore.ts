@@ -1,7 +1,7 @@
 import { makeObservable, action, observable, computed, toJS, makeAutoObservable } from 'mobx'
 import { get, patch, post, delete_ } from 'lib/common/fetch'
 import { keyBy, isEmpty } from 'lodash'
-import { UserContent } from 'types'
+import {Dashboards, UserContent } from 'types'
 import { API_URL } from 'lib/constants'
 
 /**
@@ -70,7 +70,28 @@ export default class ProjectContent {
     if (res.error) {
       throw res.error
     }
-    this.data = res.data.length > 0 ? keyBy(res.data, 'id') : res.data
+    this.data = res.data.length > 0 ? keyBy(res.data.map((x: UserContent) => {
+      if (x.type === 'report') {
+        const originalContent = x.content as any
+        const content : Dashboards.Content = {
+          ...originalContent,
+          period_start: {
+            time_period: originalContent.period_start_time_period,
+            date: originalContent.period_start_date,
+          },
+          period_end: {
+            time_period: originalContent.period_end_time_period,
+            date: originalContent.period_end_date,
+          }
+        }
+        return {
+          ...x,
+          content
+        }
+      } else {
+        return x
+      }
+    }), 'id') : res.data
     return res
   }
 

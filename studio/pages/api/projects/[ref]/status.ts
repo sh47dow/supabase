@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import apiWrapper from 'lib/api/apiWrapper'
 import {ProjectBase} from "../../../../types";
 import {get} from "../../../../lib/common/fetch";
-import {statusFromMfToSupa} from "../../../../lib/constants";
+import {IS_OFFLINE, statusFromMfToSupa} from "../../../../lib/constants";
 
 
 export default (req: NextApiRequest, res: NextApiResponse) => apiWrapper(req, res, handler, { withAuth: true })
@@ -20,6 +20,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 const handleGet = async (req: NextApiRequest, res: NextApiResponse) => {
+    if (IS_OFFLINE) {
+        return res.status(200).json({
+            status: 'ACTIVE_HEALTHY'
+        })
+    }
+
     try {
         let result = await get<{data?: ProjectBase, error?: {code: number, message: string}}>(
             `${process.env.MEMFIRE_CLOUD_API_URL}/api/v2/projects/${process.env.BASE_PROJECT_ID}`,

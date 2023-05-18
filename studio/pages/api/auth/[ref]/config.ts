@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import apiWrapper from 'lib/api/apiWrapper'
 import {get, post} from "../../../../lib/common/fetch";
+import {IS_OFFLINE, IS_PLATFORM} from "../../../../lib/constants";
 
 export default (req: NextApiRequest, res: NextApiResponse) => apiWrapper(req, res, handler)
 
@@ -115,7 +116,7 @@ const defaultConfig = {
     SMS_MAX_FREQUENCY: 0,
     SMS_OTP_EXP: 60,
     SMS_OTP_LENGTH: 6,
-    SMS_PROVIDER: 'twilio',
+    SMS_PROVIDER: 'aliyun',
     SMS_TWILIO_ACCOUNT_SID: null,
     SMS_TWILIO_AUTH_TOKEN: null,
     SMS_TWILIO_MESSAGE_SERVICE_SID: null,
@@ -153,8 +154,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 const handleGetAll = async (req: NextApiRequest, res: NextApiResponse) => {
+    if (IS_OFFLINE) {
+        return res.status(200).json(defaultConfig)
+    }
   try {
-    if (process.env.MEMFIRE_CLOUD_API_URL) {
+    if (IS_PLATFORM) {
       let response = await get(
         `${process.env.MEMFIRE_CLOUD_API_URL}/api/v2/project/basic/config?projectId=${process.env.BASE_PROJECT_ID}`,
         {
@@ -179,8 +183,11 @@ const handleGetAll = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
+    if (IS_OFFLINE) {
+        return res.status(200).json({})
+    }
     try {
-        if (process.env.MEMFIRE_CLOUD_API_URL) {
+        if (IS_PLATFORM) {
             let response = await post(
               `${process.env.MEMFIRE_CLOUD_API_URL}/api/v2/project/basic/config`,
               { project_id: process.env.BASE_PROJECT_ID, ...req.body },
@@ -209,9 +216,11 @@ const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handlePatch = async (req: NextApiRequest, res: NextApiResponse) => {
+    if (IS_OFFLINE) {
+        return res.status(200).json({})
+    }
     try {
-        const accessToken = JSON.parse(req.cookies['_token']).token
-        if (process.env.MEMFIRE_CLOUD_API_URL) {
+        if (IS_PLATFORM) {
             let response = await post(
               `${process.env.MEMFIRE_CLOUD_API_URL}/api/v2/project/basic/config`,
               { project_id: process.env.BASE_PROJECT_ID, ...req.body },

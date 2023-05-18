@@ -17,7 +17,7 @@ export const createReport = async ({ router }: any) => {
   if (error) throw error
 
   await contentStore.load()
-  router.push(`/project/${ref}/reports/${newReport[0].id}`)
+  router.push(`/project/${ref}/reports/${newReport.id}`)
 }
 
 /*

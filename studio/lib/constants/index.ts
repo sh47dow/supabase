@@ -3,6 +3,7 @@ export * from './metrics'
 export * from './functions'
 
 export const IS_PLATFORM = process.env.NEXT_PUBLIC_IS_PLATFORM === 'true'
+export const IS_OFFLINE = process.env.NEXT_PUBLIC_IS_OFFLINE === 'true'
 export const API_URL = IS_PLATFORM ? process.env.NEXT_PUBLIC_API_URL : '/api'
 export const API_ADMIN_URL = IS_PLATFORM ? process.env.NEXT_PUBLIC_API_ADMIN_URL : undefined
 export const PG_META_URL = IS_PLATFORM

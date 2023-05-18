@@ -12,6 +12,7 @@ import {
   useState,
 } from 'react'
 import {getCookie} from "./helpers";
+import {IS_OFFLINE} from "./constants";
 
 /* Auth Context */
 
@@ -63,7 +64,29 @@ export const AuthProvider = ({ children }: PropsWithChildren<AuthProviderProps>)
   // Setup a possible existing session
   useEffect(() => {
     let mounted = true
-
+    if (IS_OFFLINE) {
+      if (mounted) {
+        setSession({
+          access_token: "", expires_in: 0, refresh_token: "", token_type: "Bearer",
+          user: {
+            id: "1",
+            aud: "1",
+            app_metadata: {
+              provider: "email",
+            },
+            user_metadata: {
+              full_name: "Test User",
+            },
+            email: "test@nimblex.com",
+            created_at: "",
+          }
+        })
+        setIsLoading(false)
+      }
+      return () => {
+        mounted = false
+      }
+    }
     const _token = getCookie('_token')
     if (_token) {
       getAuthUser(_token.token).then(({user}) => {

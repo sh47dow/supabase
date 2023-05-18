@@ -12,7 +12,7 @@ import SVG from 'react-inlinesvg'
 
 import { ProjectBase } from 'types'
 import { Route } from 'components/ui/ui.types'
-import { IS_PLATFORM, PROJECT_STATUS } from 'lib/constants'
+import {IS_OFFLINE, IS_PLATFORM, PROJECT_STATUS} from 'lib/constants'
 import IconBase from "ui/src/components/Icon/IconBase";
 
 export const generateToolRoutes = (ref?: string, project?: ProjectBase): Route[] => {
@@ -97,7 +97,7 @@ export const generateProductRoutes = (ref?: string, project?: ProjectBase): Rout
           ? buildingUrl
           : `/project/${ref}/storage/buckets`),
     },
-    {
+    ...(!IS_OFFLINE ? [{
       key: 'hosting',
       label: '静态托管',
       icon: <IconBase size={18} strokeWidth={2} src={
@@ -118,8 +118,8 @@ export const generateProductRoutes = (ref?: string, project?: ProjectBase): Rout
           : isProjectBuilding
             ? buildingUrl
             : `/project/${ref}/hosting`)
-    },
-    ...(IS_PLATFORM
+    }] : []),
+    ...(IS_PLATFORM && !IS_OFFLINE
       ? [
           {
             key: 'functions',

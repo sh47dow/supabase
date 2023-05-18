@@ -1,5 +1,5 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
-import { IS_PLATFORM } from '../constants'
+import {IS_OFFLINE, IS_PLATFORM} from '../constants'
 import { apiAuthenticate } from './apiAuthenticate'
 import { verify } from 'jsonwebtoken'
 import {post} from "../common/fetch";
@@ -16,7 +16,7 @@ export default async function apiWrapper(
 ) {
   try {
     const { withAuth } = options || {}
-
+    if (IS_OFFLINE) return handler(req, res)
     // if (IS_PLATFORM && withAuth) {
     //   const response = await apiAuthenticate(req, res)
     //   if (response.error) {

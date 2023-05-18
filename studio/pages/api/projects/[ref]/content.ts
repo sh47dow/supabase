@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import apiWrapper from 'lib/api/apiWrapper'
 import {Sequelize} from "sequelize";
 import {isUndefined} from "lodash";
+import {IS_OFFLINE} from "../../../../lib/constants";
+
 
 const sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`);
 const UserContent = require('../../../../db-modal/user-content')(sequelize);
@@ -41,6 +43,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 const handleGetAll = async (req: NextApiRequest, res: NextApiResponse) => {
+  // if (IS_OFFLINE) {
+  //   return res.status(200).json({ data: []})
+  // }
   try {
     const contents = await UserContent.findAll({
       include: {
@@ -55,6 +60,9 @@ const handleGetAll = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
+  // if (IS_OFFLINE) {
+  //   return res.status(200).json({ data: req.body})
+  // }
   try {
     const payload = req.body
     if (isUndefined(payload)) {
@@ -71,6 +79,9 @@ const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handlePatch = async (req: NextApiRequest, res: NextApiResponse) => {
+  // if (IS_OFFLINE) {
+  //   return res.status(200).json({ data: req.body})
+  // }
   try {
     const payload = req.body
     if (isUndefined(payload)) {
@@ -79,9 +90,7 @@ const handlePatch = async (req: NextApiRequest, res: NextApiResponse) => {
     if (payload.content) {
       const userContent = await UserContent.findByPk(payload.id)
       const data = await ContentDetail.update({
-        schema_version: payload.content.schema_version,
-        favorite: payload.content.favorite,
-        sql: payload.content.sql
+        ...payload.content
       }, {
         where: { content_id: userContent.content_id }
       })
@@ -98,6 +107,9 @@ const handlePatch = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handleDelete = async (req: NextApiRequest, res: NextApiResponse) => {
+  // if (IS_OFFLINE) {
+  //   return res.status(200).json({})
+  // }
   try {
     const content = await UserContent.findByPk(req.query.id)
     const data = content.destroy()

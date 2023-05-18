@@ -1,6 +1,6 @@
 import { ProjectBase } from 'types'
 import { useFlag } from 'hooks'
-import { IS_PLATFORM, PROJECT_STATUS } from 'lib/constants'
+import {IS_OFFLINE, IS_PLATFORM, PROJECT_STATUS} from 'lib/constants'
 import { ProductMenuGroup } from 'components/ui/ProductMenu/ProductMenu.types'
 
 export const generateSettingsMenu = (ref: string, project?: ProjectBase): ProductMenuGroup[] => {
@@ -64,7 +64,7 @@ export const generateSettingsMenu = (ref: string, project?: ProjectBase): Produc
           : []),
       ],
     },
-    ...(IS_PLATFORM
+    ...(IS_PLATFORM && !IS_OFFLINE
       ? [
           {
             title: 'Billing',

@@ -35,7 +35,8 @@ const UserContent = (sequelize) => sequelize.define('UserContent', {
 	},
 }, {
 	schema: 'preference',
-	tableName: 'user_content'
+	tableName: 'user_content',
+	timestamps: false
 })
 
 module.exports = UserContent
